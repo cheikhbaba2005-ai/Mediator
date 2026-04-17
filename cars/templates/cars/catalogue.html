@@ -1,0 +1,49 @@
+{% extends 'cars/base.html' %}
+{% load static %}
+
+{% block title %}Catalogue complet{% endblock %}
+
+{% block content %}
+    <h1 class="text-center mb-5">Catalogue complet</h1>
+    <p class="lead text-center mb-5">Tous nos véhicules disponibles, que ce soit à la location ou à la vente.</p>
+
+    <!-- GRILLE DES VOITURES -->
+    <div class="row g-4">
+        {% for voiture in voitures %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card car-card h-100 shadow-sm">
+                    {% if voiture.medias.all %}
+                        {% with first_image=voiture.medias.all.0 %}
+                            <img src="{{ first_image.file.url }}" class="card-img-top" alt="{{ voiture.marque }} {{ voiture.modele }}">
+                        {% endwith %}
+                    {% else %}
+                        <img src="https://via.placeholder.com/400x250/cccccc/ffffff?text=Image+non+disponible" class="card-img-top" alt="Image non disponible">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ voiture.marque }} {{ voiture.modele }}</h5>
+                        <p class="card-text text-muted">{{ voiture.description|truncatechars:80 }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="h5 text-primary">
+                                {% if voiture.type_offre == 'location' %}
+                                    {{ voiture.prix_location|floatformat:0 }} F CFA / jour
+                                {% else %}
+                                    {{ voiture.prix_vente|floatformat:0 }} F CFA
+                                {% endif %}
+                            </span>
+                            <span class="badge {% if voiture.type_offre == 'location' %}bg-info{% else %}bg-success{% endif %}">
+                                {% if voiture.type_offre == 'location' %}Location{% else %}À vendre{% endif %}
+                            </span>
+                        </div>
+                        <a href="{% url 'detail' voiture.id %}" class="btn btn-outline-primary w-100 mt-3">Voir détails</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <p class="text-center">Aucune voiture disponible pour le moment.</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- PAGINATION (à ajouter plus tard si besoin) -->
+{% endblock %}

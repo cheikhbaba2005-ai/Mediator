@@ -1,0 +1,128 @@
+{% extends 'cars/base.html' %}
+{% load static %}
+
+{% block title %}Détails du véhicule{% endblock %}
+
+{% block content %}
+    <!-- Fil d'Ariane -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'catalogue' %}">Catalogue</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ voiture.marque }} {{ voiture.modele }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- COLONNE GAUCHE : GALERIE -->
+        <div class="col-lg-7 mb-4">
+            {% with images=voiture.medias.all %}
+            <div id="carouselDetails" class="carousel slide carousel-fade shadow rounded-3" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    {% for media in images %}
+                        {% if media.media_type == 'image' %}
+                            <button type="button" data-bs-target="#carouselDetails" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active" aria-current="true"{% endif %} aria-label="Image {{ forloop.counter }}"></button>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="carousel-inner">
+                    {% for media in images %}
+                        {% if media.media_type == 'image' %}
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                <img src="{{ media.file.url }}" class="d-block w-100" alt="{{ voiture.marque }} {{ voiture.modele }}">
+                            </div>
+                        {% endif %}
+                    {% empty %}
+                        <div class="carousel-item active">
+                            <img src="https://via.placeholder.com/800x500/cccccc/ffffff?text=Aucune+image" class="d-block w-100" alt="Aucune image">
+                        </div>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselDetails" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Précédent</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselDetails" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Suivant</span>
+                </button>
+            </div>
+            <!-- Miniatures -->
+            <div class="row mt-2 g-2">
+                {% for media in images %}
+                    {% if media.media_type == 'image' %}
+                        <div class="col-3">
+                            <img src="{{ media.file.url }}" class="img-fluid rounded cursor-pointer" data-bs-target="#carouselDetails" data-bs-slide-to="{{ forloop.counter0 }}" style="cursor: pointer;">
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% endwith %}
+        </div>
+
+        <!-- COLONNE DROITE : INFOS -->
+        <div class="col-lg-5">
+            <h1 class="mb-3">{{ voiture.marque }} {{ voiture.modele }}</h1>
+            <p class="lead">{{ voiture.description|truncatechars:150 }}</p>
+
+            <div class="d-flex align-items-center mb-3">
+                <span class="h2 text-primary me-3">
+                    {% if voiture.type_offre == 'location' %}
+                        {{ voiture.prix_location|floatformat:0 }} F CFA / jour
+                    {% else %}
+                        {{ voiture.prix_vente|floatformat:0 }} F CFA
+                    {% endif %}
+                </span>
+                <span class="badge {% if voiture.type_offre == 'location' %}bg-info{% else %}bg-success{% endif %} fs-6">
+                    {% if voiture.type_offre == 'location' %}Location{% else %}À vendre{% endif %}
+                </span>
+            </div>
+
+            <ul class="list-group list-group-flush mb-4">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span><i class="fas fa-calendar-alt me-2 text-muted"></i>Année</span>
+                    <span class="fw-bold">{{ voiture.annee }}</span>
+                </li>
+                <!-- Autres caractéristiques peuvent être ajoutées si présentes dans le modèle -->
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span><i class="fas fa-tag me-2 text-muted"></i>Disponibilité</span>
+                    <span class="fw-bold {% if voiture.disponibilite %}text-success{% else %}text-danger{% endif %}">
+                        {% if voiture.disponibilite %}Disponible{% else %}Indisponible{% endif %}
+                    </span>
+                </li>
+            </ul>
+
+            <div class="d-grid gap-2">
+                <a href="{% url 'contact' %}" class="btn btn-primary btn-lg">Contacter le vendeur</a>
+                <a href="{% url 'catalogue' %}" class="btn btn-outline-secondary">Retour au catalogue</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION VIDÉO -->
+    {% with videos=voiture.medias.all %}
+        {% for media in videos %}
+            {% if media.media_type == 'video' %}
+                <div class="row mt-5">
+                    <div class="col-12">
+                        <h2 class="mb-4">Vidéo du véhicule</h2>
+                        <div class="ratio ratio-16x9 mb-4 shadow rounded-3">
+                            <video src="{{ media.file.url }}" controls></video>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endwith %}
+
+    <!-- DESCRIPTION DÉTAILLÉE -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <h2 class="mb-4">Description détaillée</h2>
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <p class="card-text">{{ voiture.description|linebreaks }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

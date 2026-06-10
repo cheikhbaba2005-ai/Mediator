@@ -249,7 +249,8 @@ def admin_messages(request):
         msg.lu = True
         msg.save()
         messages.success(request, "Message marqué comme lu.")
-        return render(request, 'cars/admin/messages.html', {
+        
+    return render(request, 'cars/admin/messages.html', {
         'contacts': contacts,
         'test_drives': test_drives
     })

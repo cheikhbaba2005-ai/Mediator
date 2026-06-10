@@ -7,6 +7,9 @@ Chaque classe modèle représente une table dans la base de données.
 from django.db import models
 from django.contrib.auth.models import User  # Modèle d'utilisateur intégré à Django
 from django.core.exceptions import ValidationError
+from PIL import Image
+from io import BytesIO
+from django.core.files.base import ContentFile
 import os
 
 
@@ -67,7 +70,14 @@ class Car(models.Model):
     
     # Autres informations
     description = models.TextField(verbose_name="Description détaillée")
-    disponibilite = models.BooleanField(default=True, verbose_name="Disponible")
+    # Statut du véhicule
+    STATUT_CHOICES = [
+        ('disponible', 'Disponible'),
+        ('reserve', 'Réservé'),
+        ('vendu', 'Vendu'),
+    ]
+    statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='disponible', verbose_name="Statut")
+    
     date_ajout = models.DateTimeField(auto_now_add=True, verbose_name="Date d'ajout")
 
     # Configuration du modèle
@@ -164,5 +174,77 @@ class Media(models.Model):
             str: Le nom du fichier (ex: 'image.jpg')
         """
         return os.path.basename(self.file.name)
+        
+    def save(self, *args, **kwargs):
+        """Surcharge de la méthode save pour optimiser les images avant sauvegarde"""
+        if self.media_type == 'image' and self.file:
+            # Ouvrir l'image avec Pillow
+            img = Image.open(self.file)
+            # Convertir en RGB si nécessaire (ex: PNG avec transparence vers JPEG)
+            if img.mode in ("RGBA", "P"):
+                img = img.convert("RGB")
+            
+            # Redimensionner si l'image est trop grande (max 1200px)
+            max_size = (1200, 1200)
+            img.thumbnail(max_size, Image.Resampling.LANCZOS)
+            
+            # Sauvegarder dans un buffer en mémoire
+            buffer = BytesIO()
+            img.save(buffer, format='JPEG', quality=85, optimize=True)
+            buffer.seek(0)
+            
+            # Changer le nom et le contenu du fichier
+            original_filename = os.path.basename(self.file.name)
+            filename_without_ext = os.path.splitext(original_filename)[0]
+            new_filename = f"{filename_without_ext}_optim.jpg"
+            
+            self.file.save(new_filename, ContentFile(buffer.read()), save=False)
+            
+        super().save(*args, **kwargs)
+
+
+class ContactMessage(models.Model):
+    """Modèle pour stocker les messages de contact"""
+    nom = models.CharField(max_length=150, verbose_name="Nom complet")
+    email = models.EmailField(verbose_name="Email")
+    telephone = models.CharField(max_length=20, blank=True, verbose_name="Téléphone")
+    sujet = models.CharField(max_length=200, verbose_name="Sujet")
+    message = models.TextField(verbose_name="Message")
+    date_envoi = models.DateTimeField(auto_now_add=True, verbose_name="Date d'envoi")
+    lu = models.BooleanField(default=False, verbose_name="Lu")
+    
+    class Meta:
+        verbose_name = "Message de contact"
+        verbose_name_plural = "Messages de contact"
+        ordering = ['-date_envoi']
+        
+    def __str__(self):
+        return f"Message de {self.nom} - {self.sujet}"
+
+
+class TestDriveRequest(models.Model):
+    """Modèle pour les demandes d'essai routier"""
+    STATUT_DEMANDE = [
+        ('en_attente', 'En attente'),
+        ('valide', 'Validé'),
+        ('annule', 'Annulé'),
+        ('termine', 'Terminé'),
+    ]
+    
+    voiture = models.ForeignKey(Car, on_delete=models.CASCADE, related_name='test_drives', verbose_name="Véhicule")
+    nom = models.CharField(max_length=150, verbose_name="Nom complet")
+    email = models.EmailField(verbose_name="Email")
+    telephone = models.CharField(max_length=20, verbose_name="Téléphone")
+    date_souhaitee = models.DateTimeField(verbose_name="Date souhaitée pour l'essai", null=True, blank=True)
+    statut_demande = models.CharField(max_length=20, choices=STATUT_DEMANDE, default='en_attente', verbose_name="Statut de la demande")
+    date_creation = models.DateTimeField(auto_now_add=True, verbose_name="Date de la demande")
+    
+    class Meta:
+        verbose_name = "Demande d'essai"
+        verbose_name_plural = "Demandes d'essai"
+        ordering = ['-date_creation']
+        
+    def __str__(self):
+        return f"Essai pour {self.voiture} par {self.nom}"
     
     

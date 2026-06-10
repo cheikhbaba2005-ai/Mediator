@@ -1,0 +1,58 @@
+{% extends 'cars/base.html' %}
+{% load static %}
+
+{% block title %}À propos de nous - Parking Mediator{% endblock %}
+{% block meta_description %}Découvrez l'histoire, la mission et l'expertise de Parking Mediator, votre partenaire de confiance pour l'achat et la location de véhicules premium à Dakar.{% endblock %}
+
+{% block content %}
+<div class="row mb-5">
+    <div class="col-12 text-center mb-5">
+        <h1 class="display-4 text-dark mb-3 fw-bold" data-aos="fade-down">Notre Histoire</h1>
+        <p class="lead text-muted mx-auto" style="max-width: 800px;" data-aos="fade-up" data-aos-delay="100">
+            Parking Mediator est né de la volonté d'offrir un service automobile d'excellence, transparent et sur-mesure au Sénégal.
+        </p>
+    </div>
+</div>
+
+<div class="row align-items-center mb-5 pb-5 border-bottom" style="border-color: rgba(0,0,0,0.05) !important;">
+    <div class="col-md-6 mb-4 mb-md-0" data-aos="fade-right">
+        <img src="{% static 'images/slide.png' %}" alt="Notre showroom" class="img-fluid rounded-4 shadow-lg">
+    </div>
+    <div class="col-md-6 px-md-5" data-aos="fade-left">
+        <h2 class="h3 text-dark mb-4 fw-bold">L'Exigence pour Standard</h2>
+        <p class="text-muted" style="line-height: 1.8;">
+            Depuis notre création, nous sélectionnons rigoureusement chaque véhicule que nous proposons à la vente ou à la location. Notre objectif n'est pas seulement de vous fournir une voiture, mais de vous garantir une expérience de conduite inégalée et une totale tranquillité d'esprit.
+        </p>
+        <p class="text-muted" style="line-height: 1.8;">
+            Notre équipe est composée d'experts passionnés d'automobile, prêts à vous conseiller et à vous accompagner à chaque étape de votre projet automobile.
+        </p>
+    </div>
+</div>
+
+<div class="row text-center mb-5">
+    <div class="col-12 mb-5">
+        <h2 class="h3 text-dark fw-bold">Nos Valeurs</h2>
+    </div>
+    <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="0">
+        <div class="glass-panel p-5 h-100">
+            <i class="fas fa-handshake fa-3x text-primary mb-4"></i>
+            <h4 class="text-dark fw-bold mb-3">Confiance</h4>
+            <p class="text-muted mb-0">La transparence totale sur l'historique et l'état de nos véhicules est le fondement de notre relation avec vous.</p>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="glass-panel p-5 h-100">
+            <i class="fas fa-gem fa-3x text-primary mb-4"></i>
+            <h4 class="text-dark fw-bold mb-3">Qualité</h4>
+            <p class="text-muted mb-0">Chaque voiture passe par un processus de révision strict pour vous assurer des prestations haut de gamme.</p>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="glass-panel p-5 h-100">
+            <i class="fas fa-headset fa-3x text-primary mb-4"></i>
+            <h4 class="text-dark fw-bold mb-3">Service</h4>
+            <p class="text-muted mb-0">Un accompagnement personnalisé, de la recherche du véhicule jusqu'au service après-vente.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

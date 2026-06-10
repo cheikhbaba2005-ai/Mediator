@@ -1,0 +1,25 @@
+{% extends 'cars/base.html' %}
+{% load static %}
+
+{% block title %}Page non trouvée (404) - Parking Mediator{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center min-vh-50 align-items-center py-5">
+    <div class="col-md-8 text-center" data-aos="zoom-in">
+        <h1 class="display-1 fw-bold text-dark mb-0">404</h1>
+        <h2 class="h3 text-muted mb-4">Oups ! Cette page n'existe pas.</h2>
+        <p class="lead text-muted mb-5">
+            La page que vous recherchez a peut-être été déplacée, supprimée, ou vous avez saisi une adresse incorrecte.
+        </p>
+        
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'accueil' %}" class="btn btn-primary btn-lg px-4 shadow-sm">
+                <i class="fas fa-home me-2"></i>Retour à l'accueil
+            </a>
+            <a href="{% url 'catalogue' %}" class="btn btn-outline-dark btn-lg px-4 shadow-sm">
+                <i class="fas fa-car me-2"></i>Voir le catalogue
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

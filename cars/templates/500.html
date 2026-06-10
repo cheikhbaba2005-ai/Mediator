@@ -1,0 +1,25 @@
+{% extends 'cars/base.html' %}
+{% load static %}
+
+{% block title %}Erreur Interne (500) - Parking Mediator{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center min-vh-50 align-items-center py-5">
+    <div class="col-md-8 text-center" data-aos="zoom-in">
+        <h1 class="display-1 fw-bold text-dark mb-0">500</h1>
+        <h2 class="h3 text-muted mb-4">Erreur serveur interne</h2>
+        <p class="lead text-muted mb-5">
+            Oups ! Quelque chose s'est mal passé de notre côté. Notre équipe technique a été informée et travaille sur le problème.
+        </p>
+        
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'accueil' %}" class="btn btn-primary btn-lg px-4 shadow-sm">
+                <i class="fas fa-home me-2"></i>Retour à l'accueil
+            </a>
+            <a href="{% url 'contact' %}" class="btn btn-outline-dark btn-lg px-4 shadow-sm">
+                <i class="fas fa-envelope me-2"></i>Nous contacter
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

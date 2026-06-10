@@ -1,0 +1,231 @@
+/* theme.css - Thème Premium pour Parking Mediator */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+    /* Couleurs Thème Professionnel Gris/Clair */
+    --primary-color: #2b2d42;      /* Gris très foncé (presque noir) pour textes importants et footer */
+    --secondary-color: #f1f3f5;    /* Gris très clair pour sections */
+    --accent-color: #495057;       /* Gris moyen pour boutons et accents */
+    --accent-hover: #212529;       /* Gris sombre au survol */
+    
+    --light-bg: #f8f9fa;           /* Fond de base (blanc cassé) */
+    --dark-bg: #ffffff;            /* Fond principal (blanc pur) */
+    --text-color: #4a4a4a;         /* Texte principal gris foncé */
+    --text-dark: #212529;          /* Texte très foncé */
+    --text-muted: #868e96;         /* Texte grisé (secondaire) */
+    
+    /* Glassmorphism variables pour thème clair */
+    --glass-bg: rgba(255, 255, 255, 0.9); 
+    --glass-border: rgba(0, 0, 0, 0.05);   
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05); 
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    color: var(--text-color);
+    background-color: var(--light-bg); /* Fond global clair */
+    line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6, .navbar-brand {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+/* Utilitaires Glassmorphism */
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    box-shadow: var(--glass-shadow);
+}
+
+.text-gradient {
+    background: linear-gradient(135deg, var(--accent-color), #868e96);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Navbar Premium */
+.navbar {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-dark) !important;
+    letter-spacing: 1px;
+}
+
+.navbar-nav .nav-link {
+    color: var(--text-muted) !important;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 500;
+    padding: 0.5rem 1.2rem !important;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
+    color: var(--accent-color) !important;
+    background-color: rgba(212, 175, 55, 0.05);
+    border-radius: 8px;
+}
+
+/* Boutons Premium */
+.btn {
+    border-radius: 8px;
+    padding: 0.7rem 1.8rem;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.85rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--accent-color), #343a40);
+    border: none;
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--accent-hover), var(--accent-color));
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.btn-outline-primary {
+    border: 2px solid var(--accent-color);
+    color: var(--accent-color);
+    background: transparent;
+}
+
+.btn-outline-primary:hover {
+    background: var(--accent-color);
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Cartes (Cars) */
+.card {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+.card-img-top {
+    height: 220px;
+    object-fit: cover;
+    transition: transform 0.7s ease;
+}
+
+.card:hover .card-img-top {
+    transform: scale(1.08);
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.card-title {
+    font-weight: 700;
+    color: var(--text-dark);
+    font-size: 1.3rem;
+}
+
+.card-text.text-muted {
+    color: var(--text-muted) !important;
+}
+
+.h5.text-primary {
+    color: var(--accent-color) !important;
+    font-weight: 700;
+    font-size: 1.4rem;
+}
+
+.badge.bg-info {
+    background: rgba(23, 162, 184, 0.1) !important;
+    color: #17a2b8;
+    border: 1px solid rgba(23, 162, 184, 0.3);
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+}
+
+.badge.bg-success {
+    background: rgba(40, 167, 69, 0.1) !important;
+    color: #28a745;
+    border: 1px solid rgba(40, 167, 69, 0.3);
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+}
+
+/* Footer Premium */
+footer {
+    background: var(--primary-color) !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    color: #ced4da;
+}
+
+footer h5 {
+    color: #ffffff;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 1.5rem;
+}
+
+footer a {
+    color: #adb5bd !important;
+    transition: all 0.3s ease;
+}
+
+footer a:hover {
+    color: #ffffff !important;
+    text-decoration: none !important;
+    transform: translateX(5px);
+    display: inline-block;
+}
+
+/* Sections */
+.bg-light {
+    background: var(--secondary-color) !important;
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+
+/* AOS animations */
+[data-aos] {
+    pointer-events: none;
+}
+[data-aos].aos-animate {
+    pointer-events: auto;
+}

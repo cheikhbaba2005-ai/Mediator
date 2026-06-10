@@ -124,5 +124,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'frontend'),  # Notre dossier frontend contenant css, js, images
+    os.path.join(BASE_DIR, 'static'),  # Notre dossier static (css, js, images)
 ]
+
+# Authentication
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'dashboard'
+LOGOUT_REDIRECT_URL = 'accueil'
+
+# Email (Console backend for testing)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

@@ -4,94 +4,96 @@
 {% block title %}Contact{% endblock %}
 
 {% block content %}
-    <h1 class="text-center mb-5">Contactez-nous</h1>
-    <p class="lead text-center mb-5">Une question ? Besoin d'un renseignement ? Écrivez-nous !</p>
+    <div class="d-flex justify-content-between align-items-end mb-5 mt-4" data-aos="fade-in">
+        <div>
+            <span class="text-gradient fw-bold text-uppercase tracking-wider small">Contact</span>
+            <h1 class="mt-2 mb-0 text-dark">Contactez-nous</h1>
+            <p class="lead text-muted mt-2">Une question ? Besoin d'un renseignement ? Écrivez-nous !</p>
+        </div>
+    </div>
 
     <div class="row g-5">
         <!-- FORMULAIRE -->
-        <div class="col-lg-7">
-            <div class="card shadow-sm border-0">
-                <div class="card-body p-4">
-                    <h4 class="mb-4">Envoyez-nous un message</h4>
-                    <form method="post" action="{% url 'contact' %}">
-                        {% csrf_token %}
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label for="nom" class="form-label">Nom complet *</label>
-                                <input type="text" class="form-control" id="nom" name="nom" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="email" class="form-label">Email *</label>
-                                <input type="email" class="form-control" id="email" name="email" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="telephone" class="form-label">Téléphone</label>
-                                <input type="tel" class="form-control" id="telephone" name="telephone">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="sujet" class="form-label">Sujet *</label>
-                                <select class="form-select" id="sujet" name="sujet" required>
-                                    <option selected disabled value="">Choisissez un sujet</option>
-                                    <option>Demande d'information sur un véhicule</option>
-                                    <option>Demande de location</option>
-                                    <option>Demande d'achat</option>
-                                    <option>Prise de rendez-vous</option>
-                                    <option>Autre</option>
-                                </select>
-                            </div>
-                            <div class="col-12">
-                                <label for="message" class="form-label">Message *</label>
-                                <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="rgpd" required>
-                                    <label class="form-check-label small" for="rgpd">
-                                        J'accepte que mes données soient traitées pour répondre à ma demande.
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <button type="submit" class="btn btn-primary btn-lg w-100">Envoyer le message</button>
+        <div class="col-lg-7" data-aos="fade-up" data-aos-delay="100">
+            <div class="glass-panel" style="border: 1px solid rgba(0,0,0,0.05); padding: 2rem; border-radius: 16px;">
+                <h4 class="mb-4 text-dark border-bottom pb-3">Envoyez-nous un message</h4>
+                <form method="post" action="{% url 'contact' %}">
+                    {% csrf_token %}
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label for="nom" class="form-label text-dark fw-medium">Nom complet *</label>
+                            <input type="text" class="form-control" id="nom" name="nom" required style="border: 1px solid rgba(0,0,0,0.1); background: #fff;">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="email" class="form-label text-dark fw-medium">Email *</label>
+                            <input type="email" class="form-control" id="email" name="email" required style="border: 1px solid rgba(0,0,0,0.1); background: #fff;">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="telephone" class="form-label text-dark fw-medium">Téléphone</label>
+                            <input type="tel" class="form-control" id="telephone" name="telephone" style="border: 1px solid rgba(0,0,0,0.1); background: #fff;">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="sujet" class="form-label text-dark fw-medium">Sujet *</label>
+                            <select class="form-select" id="sujet" name="sujet" required style="border: 1px solid rgba(0,0,0,0.1); background: #fff;">
+                                <option selected disabled value="">Choisissez un sujet</option>
+                                <option>Demande d'information sur un véhicule</option>
+                                <option>Demande de location</option>
+                                <option>Demande d'achat</option>
+                                <option>Prise de rendez-vous</option>
+                                <option>Autre</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label for="message" class="form-label text-dark fw-medium">Message *</label>
+                            <textarea class="form-control" id="message" name="message" rows="5" required style="border: 1px solid rgba(0,0,0,0.1); background: #fff;"></textarea>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="rgpd" required>
+                                <label class="form-check-label small text-muted" for="rgpd">
+                                    J'accepte que mes données soient traitées pour répondre à ma demande.
+                                </label>
                             </div>
                         </div>
-                    </form>
-                </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary btn-lg w-100 mt-2">Envoyer le message</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
 
         <!-- COORDONNÉES ET CARTE -->
-<div class="card shadow-sm border-0 mb-4">
-    <div class="card-body p-4">
-        <h4 class="mb-4">Nos coordonnées</h4>
-        <ul class="list-unstyled">
-            <li class="mb-3">
-                <i class="fas fa-user fa-fw text-primary me-3"></i>
-                Responsable : Babacar DIAGNE
-            </li>
-            <li class="mb-3">
-                <i class="fas fa-map-marker-alt fa-fw text-primary me-3"></i>
-                Place Léopold Sédar Senghor<br>
-                Dakar, Sénégal
-            </li>
-            <li class="mb-3">
-                <i class="fas fa-phone fa-fw text-primary me-3"></i>
-                <a href="tel:+221775096509" class="text-decoration-none">77 509 65 09</a> / 
-                <a href="tel:+221774705252" class="text-decoration-none">77 470 52 52</a> / 
-                <a href="tel:+221776566662" class="text-decoration-none">77 656 66 62</a>
-            </li>
-            <li class="mb-3">
-                <i class="fas fa-envelope fa-fw text-primary me-3"></i>
-                <a href="mailto:babsmediator@hotmail.fr" class="text-decoration-none">babsmediator@hotmail.fr</a>
-            </li>
-            <li class="mb-3">
-                <i class="fas fa-clock fa-fw text-primary me-3"></i>
-                Lun - Ven : 9h - 19h<br>
-                Sam : 10h - 17h
-            </li>
-        </ul>
-    </div>
-</div>
+        <div class="col-lg-5" data-aos="fade-up" data-aos-delay="200">
+            <div class="glass-panel mb-4" style="border: 1px solid rgba(0,0,0,0.05); padding: 2rem; border-radius: 16px;">
+                <h4 class="mb-4 text-dark border-bottom pb-3">Nos coordonnées</h4>
+                <ul class="list-unstyled">
+                    <li class="mb-3 text-dark">
+                        <i class="fas fa-user fa-fw text-primary me-3"></i>
+                        Responsable : Babacar DIAGNE
+                    </li>
+                    <li class="mb-3 text-dark">
+                        <i class="fas fa-map-marker-alt fa-fw text-primary me-3"></i>
+                        Place Léopold Sédar Senghor<br>
+                        <span class="ms-5">Dakar, Sénégal</span>
+                    </li>
+                    <li class="mb-3 text-dark">
+                        <i class="fas fa-phone fa-fw text-primary me-3"></i>
+                        <a href="tel:+221775096509" class="text-decoration-none text-dark fw-medium">77 509 65 09</a> / 
+                        <a href="tel:+221774705252" class="text-decoration-none text-dark fw-medium">77 470 52 52</a> / 
+                        <a href="tel:+221776566662" class="text-decoration-none text-dark fw-medium">77 656 66 62</a>
+                    </li>
+                    <li class="mb-3 text-dark">
+                        <i class="fas fa-envelope fa-fw text-primary me-3"></i>
+                        <a href="mailto:babsmediator@hotmail.fr" class="text-decoration-none text-dark fw-medium">babsmediator@hotmail.fr</a>
+                    </li>
+                    <li class="mb-3 text-dark">
+                        <i class="fas fa-clock fa-fw text-primary me-3"></i>
+                        Lun - Ven : 9h - 19h<br>
+                        <span class="ms-5">Sam : 10h - 17h</span>
+                    </li>
+                </ul>
+            </div>
 
             <!-- Carte -->
             <div class="card shadow-sm border-0">

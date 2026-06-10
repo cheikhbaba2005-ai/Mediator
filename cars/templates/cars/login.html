@@ -1,0 +1,182 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - Parking Mediator</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #f8f9fa;
+            --secondary: #2b2d42;
+            --accent: #FFD700;
+            --text-light: #4a4a4a;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--secondary) 0%, #1a1b26 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .logo-container {
+            margin-bottom: 2rem;
+        }
+
+        .logo-container img {
+            width: 120px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .text-muted-custom {
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+
+        .form-floating {
+            text-align: left;
+            margin-bottom: 1.25rem;
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border-radius: 10px;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 0.25rem rgba(255, 215, 0, 0.15);
+            color: #fff;
+        }
+
+        .form-floating label {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .form-floating > .form-control:focus ~ label,
+        .form-floating > .form-control:not(:placeholder-shown) ~ label {
+            color: var(--accent);
+        }
+
+        .btn-login {
+            background: linear-gradient(135deg, var(--accent) 0%, #D4AF37 100%);
+            color: var(--secondary);
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 0.8rem;
+            border-radius: 10px;
+            border: none;
+            width: 100%;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.2);
+        }
+
+        .alert-error {
+            background: rgba(231, 76, 60, 0.1);
+            border: 1px solid rgba(231, 76, 60, 0.3);
+            color: #ff6b6b;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        .back-link {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-top: 1.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <div class="logo-container">
+            <img src="{% static 'images/logo.jpeg' %}" alt="Parking Mediator Logo">
+        </div>
+        
+        <h2>Accès Sécurisé</h2>
+        <p class="text-muted-custom">Veuillez vous identifier pour accéder au Dashboard</p>
+
+        {% if form.errors %}
+        <div class="alert-error">
+            <i class="fas fa-exclamation-circle me-2"></i> Identifiant ou mot de passe incorrect.
+        </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            
+            <div class="form-floating">
+                <input type="text" class="form-control" id="id_username" name="username" placeholder="Nom d'utilisateur" required>
+                <label for="id_username"><i class="fas fa-user me-2"></i> Nom d'utilisateur</label>
+            </div>
+            
+            <div class="form-floating">
+                <input type="password" class="form-control" id="id_password" name="password" placeholder="Mot de passe" required>
+                <label for="id_password"><i class="fas fa-lock me-2"></i> Mot de passe</label>
+            </div>
+
+            <input type="hidden" name="next" value="{{ next|default:'' }}">
+            
+            <button type="submit" class="btn-login">
+                Se connecter <i class="fas fa-arrow-right ms-2"></i>
+            </button>
+        </form>
+
+        <a href="{% url 'accueil' %}" class="back-link">
+            <i class="fas fa-arrow-left me-1"></i> Retour au site
+        </a>
+    </div>
+
+</body>
+</html>

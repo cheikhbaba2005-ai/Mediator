@@ -1,7 +1,8 @@
 {% extends 'cars/base.html' %}
 {% load static %}
 
-{% block title %}Détails du véhicule{% endblock %}
+{% block title %}Acheter/Louer {{ voiture.marque }} {{ voiture.modele }} à Dakar{% endblock %}
+{% block meta_description %}{{ voiture.description|truncatechars:160 }}{% endblock %}
 
 {% block content %}
     <!-- Fil d'Ariane -->
@@ -24,16 +25,16 @@
                         {% endif %}
                     {% endfor %}
                 </div>
-                <div class="carousel-inner">
+                <div class="carousel-inner" style="cursor: zoom-in;" data-bs-toggle="modal" data-bs-target="#lightboxModal">
                     {% for media in images %}
                         {% if media.media_type == 'image' %}
                             <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                                <img src="{{ media.file.url }}" class="d-block w-100" alt="{{ voiture.marque }} {{ voiture.modele }}">
+                                <img src="{{ media.file.url }}" class="d-block w-100" alt="{{ voiture.marque }} {{ voiture.modele }}" id="img_{{ forloop.counter0 }}">
                             </div>
                         {% endif %}
                     {% empty %}
                         <div class="carousel-item active">
-                            <img src="https://via.placeholder.com/800x500/cccccc/ffffff?text=Aucune+image" class="d-block w-100" alt="Aucune image">
+                            <img src="{% static 'images/slide4.png' %}" class="d-block w-100" alt="Aucune image">
                         </div>
                     {% endfor %}
                 </div>
@@ -51,7 +52,7 @@
                 {% for media in images %}
                     {% if media.media_type == 'image' %}
                         <div class="col-3">
-                            <img src="{{ media.file.url }}" class="img-fluid rounded cursor-pointer" data-bs-target="#carouselDetails" data-bs-slide-to="{{ forloop.counter0 }}" style="cursor: pointer;">
+                            <img src="{{ media.file.url }}" class="img-fluid rounded shadow-sm" data-bs-target="#carouselDetails" data-bs-slide-to="{{ forloop.counter0 }}" style="cursor: pointer; object-fit: cover; height: 100px;">
                         </div>
                     {% endif %}
                 {% endfor %}
@@ -61,39 +62,41 @@
 
         <!-- COLONNE DROITE : INFOS -->
         <div class="col-lg-5">
-            <h1 class="mb-3">{{ voiture.marque }} {{ voiture.modele }}</h1>
-            <p class="lead">{{ voiture.description|truncatechars:150 }}</p>
+            <h1 class="mb-3 text-dark">{{ voiture.marque }} {{ voiture.modele }}</h1>
+            <p class="lead text-muted">{{ voiture.description|truncatechars:150 }}</p>
 
-            <div class="d-flex align-items-center mb-3">
-                <span class="h2 text-primary me-3">
+            <div class="d-flex align-items-center mb-4 p-3 rounded" style="background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.05);">
+                <span class="h2 text-primary mb-0 me-3">
                     {% if voiture.type_offre == 'location' %}
-                        {{ voiture.prix_location|floatformat:0 }} F CFA / jour
+                        {{ voiture.prix_location|floatformat:0 }} F CFA <span class="fs-6 text-muted">/ jour</span>
                     {% else %}
                         {{ voiture.prix_vente|floatformat:0 }} F CFA
                     {% endif %}
                 </span>
-                <span class="badge {% if voiture.type_offre == 'location' %}bg-info{% else %}bg-success{% endif %} fs-6">
+                <span class="badge {% if voiture.type_offre == 'location' %}bg-info{% else %}bg-success{% endif %} fs-6 shadow-sm">
                     {% if voiture.type_offre == 'location' %}Location{% else %}À vendre{% endif %}
                 </span>
             </div>
 
-            <ul class="list-group list-group-flush mb-4">
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span><i class="fas fa-calendar-alt me-2 text-muted"></i>Année</span>
-                    <span class="fw-bold">{{ voiture.annee }}</span>
+            <ul class="list-group list-group-flush mb-4 rounded shadow-sm" style="overflow: hidden;">
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                    <span><i class="fas fa-calendar-alt me-2 text-primary"></i>Année</span>
+                    <span class="fw-bold text-dark">{{ voiture.annee }}</span>
                 </li>
-                <!-- Autres caractéristiques peuvent être ajoutées si présentes dans le modèle -->
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span><i class="fas fa-tag me-2 text-muted"></i>Disponibilité</span>
-                    <span class="fw-bold {% if voiture.disponibilite %}text-success{% else %}text-danger{% endif %}">
-                        {% if voiture.disponibilite %}Disponible{% else %}Indisponible{% endif %}
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                    <span><i class="fas fa-tag me-2 text-primary"></i>Statut</span>
+                    <span class="fw-bold {% if voiture.statut == 'disponible' %}text-success{% elif voiture.statut == 'reserve' %}text-warning{% else %}text-danger{% endif %}">
+                        {{ voiture.get_statut_display|upper }}
                     </span>
                 </li>
             </ul>
 
             <div class="d-grid gap-2">
-                <a href="{% url 'contact' %}" class="btn btn-primary btn-lg">Contacter le vendeur</a>
-                <a href="{% url 'catalogue' %}" class="btn btn-outline-secondary">Retour au catalogue</a>
+                <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#testDriveModal">
+                    <i class="fas fa-car me-2"></i>Réserver un essai
+                </button>
+                <a href="{% url 'contact' %}" class="btn btn-outline-primary btn-lg">Contacter le vendeur</a>
+                <a href="{% url 'catalogue' %}" class="btn btn-outline-secondary mt-2">Retour au catalogue</a>
             </div>
         </div>
     </div>
@@ -104,8 +107,8 @@
             {% if media.media_type == 'video' %}
                 <div class="row mt-5">
                     <div class="col-12">
-                        <h2 class="mb-4">Vidéo du véhicule</h2>
-                        <div class="ratio ratio-16x9 mb-4 shadow rounded-3">
+                        <h2 class="mb-4 text-dark border-bottom pb-2">Vidéo du véhicule</h2>
+                        <div class="ratio ratio-16x9 mb-4 shadow rounded-3 overflow-hidden" style="border: 1px solid rgba(0,0,0,0.05);">
                             <video src="{{ media.file.url }}" controls></video>
                         </div>
                     </div>
@@ -115,14 +118,129 @@
     {% endwith %}
 
     <!-- DESCRIPTION DÉTAILLÉE -->
-    <div class="row mt-4">
+    <div class="row mt-4 mb-5">
         <div class="col-12">
-            <h2 class="mb-4">Description détaillée</h2>
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <p class="card-text">{{ voiture.description|linebreaks }}</p>
+            <h2 class="mb-4 text-dark border-bottom pb-2">Description détaillée</h2>
+            <div class="glass-panel p-4" style="border: 1px solid rgba(0,0,0,0.05);">
+                <p class="mb-0 text-dark" style="line-height: 1.8;">{{ voiture.description|linebreaksbr }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- VÉHICULES SIMILAIRES -->
+    {% if vehicules_similaires %}
+    <div class="row mt-5 mb-5">
+        <div class="col-12">
+            <h2 class="mb-4 text-dark border-bottom pb-2">Ces véhicules pourraient aussi vous intéresser</h2>
+        </div>
+        <div class="row g-4">
+            {% for sim_car in vehicules_similaires %}
+            <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1 }}00">
+                <div class="card car-card h-100 shadow-sm" style="border: 1px solid rgba(0,0,0,0.05); border-radius: 16px; overflow: hidden; background: rgba(255,255,255,0.95);">
+                    <div class="position-relative">
+                        {% if sim_car.medias.all %}
+                            {% with first_image=sim_car.medias.all.0 %}
+                                <img src="{{ first_image.file.url }}" class="card-img-top" alt="{{ sim_car.marque }} {{ sim_car.modele }}" style="height: 200px; object-fit: cover;">
+                            {% endwith %}
+                        {% else %}
+                            <img src="{% static 'images/slide4.png' %}" class="card-img-top" alt="Image par défaut" style="height: 200px; object-fit: cover;">
+                        {% endif %}
+                        
+                        <div class="position-absolute top-0 end-0 p-3 d-flex flex-column align-items-end gap-2">
+                            <span class="badge {% if sim_car.type_offre == 'location' %}bg-info{% else %}bg-success{% endif %} shadow-sm">
+                                {% if sim_car.type_offre == 'location' %}Location{% else %}À vendre{% endif %}
+                            </span>
+                            
+                            {% if sim_car.statut == 'vendu' %}
+                                <span class="badge bg-danger shadow-sm" style="font-size: 0.9em; padding: 0.5em 0.8em;">VENDU</span>
+                            {% elif sim_car.statut == 'reserve' %}
+                                <span class="badge bg-warning shadow-sm text-dark" style="font-size: 0.9em; padding: 0.5em 0.8em;">RÉSERVÉ</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="card-body d-flex flex-column p-4">
+                        <h5 class="card-title text-dark fw-bold mb-2">{{ sim_car.marque }} {{ sim_car.modele }} <span class="text-muted fs-6 fw-normal">({{ sim_car.annee }})</span></h5>
+                        
+                        <div class="d-flex justify-content-between align-items-center mt-auto pt-3 border-top" style="border-color: rgba(0,0,0,0.05) !important;">
+                            <span class="h5 text-primary mb-0 fw-bold">
+                                {% if sim_car.type_offre == 'location' %}
+                                    {{ sim_car.prix_location|floatformat:0 }} F CFA <span class="small text-muted fs-6 fw-normal">/ jour</span>
+                                {% else %}
+                                    {{ sim_car.prix_vente|floatformat:0 }} F CFA
+                                {% endif %}
+                            </span>
+                        </div>
+                        <a href="{% url 'detail' sim_car.id %}" class="btn btn-outline-primary w-100 mt-4 fw-bold">Découvrir</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Modal Lightbox -->
+    <div class="modal fade" id="lightboxModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content bg-transparent border-0">
+                <div class="modal-header border-0 pb-0">
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center pt-0">
+                    <img src="" id="lightboxImage" class="img-fluid rounded shadow-lg" alt="Plein écran">
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Modal Demande Essai -->
+    <div class="modal fade" id="testDriveModal" tabindex="-1" aria-labelledby="testDriveModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title text-dark fw-bold" id="testDriveModalLabel">Demande d'essai - {{ voiture.marque }} {{ voiture.modele }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small mb-4">Laissez-nous vos coordonnées et la date souhaitée, nous vous recontacterons très vite pour confirmer le rendez-vous.</p>
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="{{ form.nom.id_for_label }}" class="form-label text-dark fw-bold">Nom complet</label>
+                            <input type="text" name="nom" class="form-control" id="{{ form.nom.id_for_label }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.email.id_for_label }}" class="form-label text-dark fw-bold">Email</label>
+                            <input type="email" name="email" class="form-control" id="{{ form.email.id_for_label }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.telephone.id_for_label }}" class="form-label text-dark fw-bold">Téléphone</label>
+                            <input type="text" name="telephone" class="form-control" id="{{ form.telephone.id_for_label }}" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="{{ form.date_souhaitee.id_for_label }}" class="form-label text-dark fw-bold">Date souhaitée</label>
+                            {{ form.date_souhaitee }}
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 py-2">Confirmer la demande</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Script pour la Lightbox
+        document.addEventListener('DOMContentLoaded', function() {
+            var lightboxModal = document.getElementById('lightboxModal')
+            lightboxModal.addEventListener('show.bs.modal', function (event) {
+                // Trouver l'image active dans le carrousel
+                var activeItem = document.querySelector('#carouselDetails .carousel-item.active img');
+                if (activeItem) {
+                    var imgSrc = activeItem.src;
+                    document.getElementById('lightboxImage').src = imgSrc;
+                }
+            })
+        });
+    </script>
 {% endblock %}

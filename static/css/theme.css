@@ -60,6 +60,16 @@ h1, h2, h3, h4, h5, h6, .navbar-brand {
     padding: 1rem 0;
 }
 
+@media (max-width: 576px) {
+    .navbar-brand span {
+        font-size: 1.1rem !important;
+    }
+    .navbar-brand img {
+        height: 35px !important;
+        margin-right: 10px !important;
+    }
+}
+
 .navbar-brand {
     font-size: 1.8rem;
     font-weight: 700;

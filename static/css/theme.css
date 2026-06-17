@@ -144,6 +144,7 @@ h1, h2, h3, h4, h5, h6, .navbar-brand {
     overflow: hidden;
     transition: all 0.4s ease;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+    position: relative;
 }
 
 .card:hover {
@@ -166,10 +167,39 @@ h1, h2, h3, h4, h5, h6, .navbar-brand {
     padding: 1.5rem;
 }
 
+/* Floating Badges for Cars */
+.floating-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 10;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.floating-status {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    z-index: 10;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
 .card-title {
     font-weight: 700;
     color: var(--text-dark);
     font-size: 1.3rem;
+    line-height: 1.2;
+    margin-bottom: 0.25rem;
+}
+
+.card-subtitle-year {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--accent-color);
 }
 
 .card-text.text-muted {
@@ -183,21 +213,67 @@ h1, h2, h3, h4, h5, h6, .navbar-brand {
 }
 
 .badge.bg-info {
-    background: rgba(23, 162, 184, 0.1) !important;
-    color: #17a2b8;
+    background: rgba(23, 162, 184, 0.15) !important;
+    color: #117a8b;
     border: 1px solid rgba(23, 162, 184, 0.3);
     font-weight: 600;
     padding: 0.5rem 1rem;
-    border-radius: 6px;
+    border-radius: 8px;
 }
 
 .badge.bg-success {
-    background: rgba(40, 167, 69, 0.1) !important;
-    color: #28a745;
+    background: rgba(40, 167, 69, 0.15) !important;
+    color: #1e7e34;
     border: 1px solid rgba(40, 167, 69, 0.3);
     font-weight: 600;
     padding: 0.5rem 1rem;
-    border-radius: 6px;
+    border-radius: 8px;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    /* Hero Section */
+    .hero-title {
+        font-size: 2.5rem !important;
+        line-height: 1.1;
+    }
+    .hero-buttons {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.8rem !important;
+    }
+    .hero-buttons .btn {
+        width: 100%;
+    }
+    
+    /* Cards */
+    .card {
+        border-radius: 20px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    }
+    .card-body {
+        padding: 1.2rem;
+    }
+    .card-title {
+        font-size: 1.2rem;
+    }
+    .h5.text-primary {
+        font-size: 1.3rem;
+    }
+    
+    /* Navbar Toggler (Hamburger) */
+    .navbar-toggler {
+        border: none !important;
+        padding: 0.5rem;
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+    .navbar-toggler:focus {
+        box-shadow: none !important;
+    }
+    .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2833, 37, 41, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+    }
 }
 
 /* Footer Premium */

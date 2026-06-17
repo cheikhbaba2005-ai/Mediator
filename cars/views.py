@@ -346,3 +346,13 @@ def admin_user_delete(request, user_id):
         messages.success(request, f"L'utilisateur {user.username} a été supprimé.")
         return redirect('admin_user_list')
     return render(request, 'cars/admin/confirm_delete.html', {'objet': f"l'utilisateur {user.username}", 'cancel_url': 'admin_user_list'})
+
+from django.contrib.auth.models import User
+from django.http import HttpResponse
+
+def setup_admin(request):
+    """Vue temporaire pour créer l'administrateur sans ligne de commande."""
+    if not User.objects.filter(username='admin').exists():
+        User.objects.create_superuser('admin', 'admin@admin.com', 'admin')
+        return HttpResponse("<h1>Succès !</h1><p>Administrateur créé. <br>Identifiant: <b>admin</b> <br>Mot de passe: <b>admin</b></p><br><a href='/login/' style='padding: 10px 20px; background: #2b2d42; color: white; text-decoration: none; border-radius: 5px;'>Aller au Tableau de Bord</a>")
+    return HttpResponse("<h1>Déjà fait !</h1><p>L'administrateur existe déjà.</p><br><a href='/login/' style='padding: 10px 20px; background: #2b2d42; color: white; text-decoration: none; border-radius: 5px;'>Aller au Tableau de Bord</a>")

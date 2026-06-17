@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='cars/login.html'), name='login'),
+    path('setup-admin/', views.setup_admin, name='setup_admin'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('', views.accueil, name='accueil'),                # Page d'accueil à la racine
     path('mon-espace-prive/', views.accueil, name='accueil_alt'),  # Alias si vous voulez garder cette URL

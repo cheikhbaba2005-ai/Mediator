@@ -19,6 +19,7 @@ urlpatterns = [
     path('dashboard/voiture/ajouter/', views.admin_car_create, name='admin_car_create'),
     path('dashboard/voiture/<int:car_id>/modifier/', views.admin_car_update, name='admin_car_update'),
     path('dashboard/voiture/<int:car_id>/supprimer/', views.admin_car_delete, name='admin_car_delete'),
+    path('dashboard/voiture/suppression-multiple/', views.admin_car_bulk_delete, name='admin_car_bulk_delete'),
     path('dashboard/messages/', views.admin_messages, name='admin_messages'),
     
     # Gestion des médias

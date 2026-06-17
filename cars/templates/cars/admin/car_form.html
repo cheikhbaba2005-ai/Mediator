@@ -117,21 +117,52 @@
             margin-top: 0.5rem;
             font-size: 0.9rem;
         }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); z-index: 1000; transition: transform 0.3s; }
+            .sidebar.show { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 1rem; }
+            .mobile-menu-btn { display: inline-block; background: none; border: none; font-size: 1.5rem; color: var(--secondary); margin-right: 15px; }
+            .topbar { flex-direction: row; align-items: center; justify-content: flex-start; }
+            .topbar > div:last-child { margin-left: auto; }
+            .topbar h2, .topbar h4 { font-size: 1.2rem; }
+            .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 999; }
+            .sidebar-overlay.show { display: block; }
+        }
+        @media (min-width: 769px) {
+            .mobile-menu-btn { display: none; }
+            .sidebar-overlay { display: none; }
+        }
     </style>
+
 </head>
 <body>
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('show'); this.classList.remove('show');"></div>
+
 
     <!-- Topbar -->
-    <div class="topbar">
+            <div class="topbar">
+            <div class="d-flex align-items-center">
+                <button class="mobile-menu-btn" onclick="document.querySelector('.sidebar').classList.toggle('show'); document.querySelector('.sidebar-overlay').classList.toggle('show');">
+                    <i class="fas fa-bars"></i>
+                </button>
         <a href="{% url 'dashboard' %}" class="text-decoration-none text-dark d-flex align-items-center">
             <i class="fas fa-arrow-left me-2"></i> Retour au tableau de bord
         </a>
         <h4 class="mb-0 text-dark">{{ titre }}</h4>
         <div style="width: 150px;"></div> <!-- Spacer -->
+            </div>
     </div>
 
     <!-- Main Content -->
     <div class="main-content">
+        {% if voiture %}
+        <form id="delete-media-form" method="post" style="display:none;">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{% url 'admin_car_update' voiture.id %}">
+        </form>
+        {% endif %}
         <div class="form-container">
             <h2 class="mb-4 text-center border-bottom pb-3" style="border-color: rgba(0,0,0,0.1) !important;">{{ titre }}</h2>
             
@@ -215,9 +246,18 @@
                             {{ form.image_principale.errors }}
                             
                             {% if voiture and voiture.medias.all %}
-                            <div class="mt-3 d-flex align-items-center">
-                                <span class="me-3 text-muted">Image actuelle :</span>
-                                <img src="{{ voiture.medias.all.0.file.url }}" alt="Image actuelle" height="80" class="rounded">
+                            <div class="mt-4 border-top pt-3" style="border-color: rgba(0,0,0,0.1) !important;">
+                                <label class="mb-3 text-muted">Toutes les images actuelles :</label>
+                                <div class="row g-2">
+                                    {% for media in voiture.medias.all %}
+                                    <div class="col-auto position-relative">
+                                        <img src="{{ media.file.url }}" alt="Image" height="100" class="rounded shadow-sm" style="object-fit: cover;">
+                                        <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 rounded-circle p-0" style="width: 24px; height: 24px; line-height: 24px; text-align: center; z-index: 10;" title="Supprimer cette image" onclick="if(confirm('Êtes-vous sûr de vouloir supprimer cette image ?')) { var f = document.getElementById('delete-media-form'); f.action = '{% url 'admin_media_delete' 999999 %}'.replace('999999', '{{ media.id }}'); f.submit(); }">
+                                            <i class="fas fa-times" style="font-size: 10px;"></i>
+                                        </button>
+                                    </div>
+                                    {% endfor %}
+                                </div>
                             </div>
                             {% endif %}
                         </div>

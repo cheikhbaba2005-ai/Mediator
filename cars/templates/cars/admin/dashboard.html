@@ -60,9 +60,31 @@
         .btn-premium:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); color: #ffffff; }
         
         .badge-premium { background: rgba(0, 0, 0, 0.05); color: var(--accent); border: 1px solid rgba(0, 0, 0, 0.1); padding: 0.4rem 0.8rem; border-radius: 6px; }
+        
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); z-index: 1000; transition: transform 0.3s; }
+            .sidebar.show { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 1rem; }
+            .mobile-menu-btn { display: inline-block; background: none; border: none; font-size: 1.5rem; color: var(--secondary); margin-right: 15px; }
+            .topbar { flex-direction: row; align-items: center; justify-content: flex-start; }
+            .topbar > div:last-child { margin-left: auto; }
+            .topbar h2 { font-size: 1.2rem; }
+            
+            /* Overlay for sidebar */
+            .sidebar-overlay {
+                display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 999;
+            }
+            .sidebar-overlay.show { display: block; }
+        }
+        @media (min-width: 769px) {
+            .mobile-menu-btn { display: none; }
+            .sidebar-overlay { display: none; }
+        }
     </style>
 </head>
 <body>
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('show'); this.classList.remove('show');"></div>
 
     <!-- Sidebar -->
     <div class="sidebar">
@@ -103,9 +125,14 @@
     <div class="main-content">
         <!-- Topbar -->
         <div class="topbar">
-            <div>
-                <h2 class="mb-1">Vue d'ensemble</h2>
-                <p class="text-muted mb-0">Bienvenue dans l'espace administrateur.</p>
+            <div class="d-flex align-items-center">
+                <button class="mobile-menu-btn" onclick="document.querySelector('.sidebar').classList.toggle('show'); document.querySelector('.sidebar-overlay').classList.toggle('show');">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div>
+                    <h2 class="mb-1">Vue d'ensemble</h2>
+                    <p class="text-muted mb-0 d-none d-md-block">Bienvenue dans l'espace administrateur.</p>
+                </div>
             </div>
             <div>
                 <a href="{% url 'admin_car_create' %}" class="btn btn-premium">
@@ -189,12 +216,21 @@
             <h3 class="mb-0">Derniers véhicules ajoutés</h3>
         </div>
 
-        <div class="table-container mb-5">
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Véhicule</th>
+        <form id="bulk-delete-form" method="post" action="{% url 'admin_car_bulk_delete' %}">
+            {% csrf_token %}
+            <div class="mb-3 d-none" id="bulk-actions">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer les véhicules sélectionnés ?');">
+                    <i class="fas fa-trash me-2"></i> Supprimer la sélection (<span id="selected-count">0</span>)
+                </button>
+            </div>
+
+            <div class="table-container mb-5">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px;"><input type="checkbox" id="select-all" class="form-check-input"></th>
+                                <th>Véhicule</th>
                             <th>Année</th>
                             <th>Type d'offre</th>
                             <th>Prix</th>
@@ -205,6 +241,7 @@
                     <tbody>
                         {% for voiture in voitures %}
                         <tr>
+                            <td><input type="checkbox" name="selected_cars" value="{{ voiture.id }}" class="form-check-input car-checkbox"></td>
                             <td>
                                 <div class="d-flex align-items-center">
                                     {% if voiture.medias.all %}
@@ -268,7 +305,7 @@
                 </table>
             </div>
         </div>
-
+        </form>
     </div>
 
     <!-- Bootstrap JS -->
@@ -331,6 +368,35 @@
                     }
                 }
             });
+            
+            // Checkbox logic
+            const selectAll = document.getElementById('select-all');
+            const checkboxes = document.querySelectorAll('.car-checkbox');
+            const bulkActions = document.getElementById('bulk-actions');
+            const selectedCount = document.getElementById('selected-count');
+
+            function updateBulkActions() {
+                const count = document.querySelectorAll('.car-checkbox:checked').length;
+                if (selectedCount) selectedCount.textContent = count;
+                if (bulkActions) {
+                    if (count > 0) {
+                        bulkActions.classList.remove('d-none');
+                    } else {
+                        bulkActions.classList.add('d-none');
+                    }
+                }
+            }
+
+            if (selectAll) {
+                selectAll.addEventListener('change', function() {
+                    checkboxes.forEach(cb => cb.checked = selectAll.checked);
+                    updateBulkActions();
+                });
+
+                checkboxes.forEach(cb => {
+                    cb.addEventListener('change', updateBulkActions);
+                });
+            }
         });
     </script>
 </body>

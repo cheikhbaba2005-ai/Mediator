@@ -237,6 +237,22 @@ def admin_car_delete(request, car_id):
     return render(request, 'cars/admin/car_confirm_delete.html', {'voiture': voiture})
 
 @staff_member_required
+def admin_car_bulk_delete(request):
+    """
+    Supprime plusieurs voitures à la fois.
+    """
+    if request.method == 'POST':
+        car_ids = request.POST.getlist('selected_cars')
+        if car_ids:
+            voitures = Car.objects.filter(id__in=car_ids)
+            count = voitures.count()
+            voitures.delete()
+            messages.success(request, f"{count} véhicule(s) supprimé(s) avec succès.")
+        else:
+            messages.warning(request, "Aucun véhicule sélectionné.")
+    return redirect('dashboard')
+
+@staff_member_required
 def admin_messages(request):
     """Vue pour lister les messages de contact et demandes d'essai"""
     contacts = ContactMessage.objects.all()
@@ -292,6 +308,9 @@ def admin_media_delete(request, media_id):
     if request.method == 'POST':
         media.delete()
         messages.success(request, "Le média a été supprimé.")
+        next_url = request.POST.get('next')
+        if next_url:
+            return redirect(next_url)
         return redirect('admin_media_list')
     return render(request, 'cars/admin/confirm_delete.html', {'objet': f"le média de {media.car.marque}", 'cancel_url': 'admin_media_list'})
 

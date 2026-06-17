@@ -39,9 +39,29 @@
         .table th { background: rgba(0,0,0,0.05); border-bottom: 1px solid rgba(0,0,0,0.05); color: var(--secondary); font-weight: 600; padding: 1.2rem 1.5rem; font-family: 'Outfit', sans-serif; }
         .table td { padding: 1rem 1.5rem; vertical-align: middle; border-bottom: 1px solid rgba(0,0,0,0.05); background: transparent; }
         .table tr:hover td { background: rgba(0,0,0,0.02); }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); z-index: 1000; transition: transform 0.3s; }
+            .sidebar.show { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 1rem; }
+            .mobile-menu-btn { display: inline-block; background: none; border: none; font-size: 1.5rem; color: var(--secondary); margin-right: 15px; }
+            .topbar { flex-direction: row; align-items: center; justify-content: flex-start; }
+            .topbar > div:last-child { margin-left: auto; }
+            .topbar h2, .topbar h4 { font-size: 1.2rem; }
+            .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 999; }
+            .sidebar-overlay.show { display: block; }
+        }
+        @media (min-width: 769px) {
+            .mobile-menu-btn { display: none; }
+            .sidebar-overlay { display: none; }
+        }
     </style>
+
 </head>
 <body>
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('show'); this.classList.remove('show');"></div>
+
 
     <div class="sidebar">
         <a href="{% url 'accueil' %}" class="sidebar-brand">
@@ -73,8 +93,12 @@
     </div>
 
     <div class="main-content">
-        <div class="topbar">
-            <div>
+                <div class="topbar">
+            <div class="d-flex align-items-center">
+                <button class="mobile-menu-btn" onclick="document.querySelector('.sidebar').classList.toggle('show'); document.querySelector('.sidebar-overlay').classList.toggle('show');">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div>
                 <h2 class="mb-1">Gestion des Utilisateurs</h2>
                 <p class="text-muted mb-0">Gérez les administrateurs du système.</p>
             </div>

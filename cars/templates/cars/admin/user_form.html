@@ -33,11 +33,35 @@
         .btn-premium:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); color: #fff; }
         .help-text { font-size: 0.85rem; color: rgba(0,0,0,0.5); margin-top: 0.25rem; }
         .errorlist { color: #ff6b6b; list-style: none; padding-left: 0; margin-top: 0.5rem; font-size: 0.9rem; }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); z-index: 1000; transition: transform 0.3s; }
+            .sidebar.show { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 1rem; }
+            .mobile-menu-btn { display: inline-block; background: none; border: none; font-size: 1.5rem; color: var(--secondary); margin-right: 15px; }
+            .topbar { flex-direction: row; align-items: center; justify-content: flex-start; }
+            .topbar > div:last-child { margin-left: auto; }
+            .topbar h2, .topbar h4 { font-size: 1.2rem; }
+            .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 999; }
+            .sidebar-overlay.show { display: block; }
+        }
+        @media (min-width: 769px) {
+            .mobile-menu-btn { display: none; }
+            .sidebar-overlay { display: none; }
+        }
     </style>
+
 </head>
 <body>
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('show'); this.classList.remove('show');"></div>
 
-    <div class="topbar">
+
+            <div class="topbar">
+            <div class="d-flex align-items-center">
+                <button class="mobile-menu-btn" onclick="document.querySelector('.sidebar').classList.toggle('show'); document.querySelector('.sidebar-overlay').classList.toggle('show');">
+                    <i class="fas fa-bars"></i>
+                </button>
         <a href="{% url 'admin_user_list' %}" class="text-decoration-none text-dark d-flex align-items-center">
             <i class="fas fa-arrow-left me-2"></i> Retour aux utilisateurs
         </a>

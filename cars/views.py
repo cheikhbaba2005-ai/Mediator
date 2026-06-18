@@ -25,6 +25,7 @@ def filtrer_et_paginer_voitures(request, queryset):
     marque = request.GET.get('marque')
     modele = request.GET.get('modele')
     annee_min = request.GET.get('annee_min')
+    prix_min = request.GET.get('prix_min')
     prix_max = request.GET.get('prix_max')
     
     if marque:
@@ -33,6 +34,8 @@ def filtrer_et_paginer_voitures(request, queryset):
         queryset = queryset.filter(modele__icontains=modele)
     if annee_min:
         queryset = queryset.filter(annee__gte=annee_min)
+    if prix_min:
+        queryset = queryset.filter(models.Q(prix_vente__gte=prix_min) | models.Q(prix_location__gte=prix_min))
     if prix_max:
         # Check against both location and vente price depending on type_offre
         # OR simply check if either is less than max

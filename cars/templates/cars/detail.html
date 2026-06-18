@@ -92,9 +92,6 @@
             </ul>
 
             <div class="d-grid gap-2">
-                <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#testDriveModal">
-                    <i class="fas fa-car me-2"></i>Réserver un essai
-                </button>
                 <a href="{% url 'contact' %}" class="btn btn-outline-primary btn-lg">Contacter le vendeur</a>
                 <a href="{% url 'catalogue' %}" class="btn btn-outline-secondary mt-2">Retour au catalogue</a>
             </div>
@@ -194,40 +191,7 @@
         </div>
     </div>
 
-    <!-- Modal Demande Essai -->
-    <div class="modal fade" id="testDriveModal" tabindex="-1" aria-labelledby="testDriveModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-light">
-                    <h5 class="modal-title text-dark fw-bold" id="testDriveModalLabel">Demande d'essai - {{ voiture.marque }} {{ voiture.modele }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p class="text-muted small mb-4">Laissez-nous vos coordonnées et la date souhaitée, nous vous recontacterons très vite pour confirmer le rendez-vous.</p>
-                    <form method="POST" action="">
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            <label for="{{ form.nom.id_for_label }}" class="form-label text-dark fw-bold">Nom complet</label>
-                            <input type="text" name="nom" class="form-control" id="{{ form.nom.id_for_label }}" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="{{ form.email.id_for_label }}" class="form-label text-dark fw-bold">Email</label>
-                            <input type="email" name="email" class="form-control" id="{{ form.email.id_for_label }}" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="{{ form.telephone.id_for_label }}" class="form-label text-dark fw-bold">Téléphone</label>
-                            <input type="text" name="telephone" class="form-control" id="{{ form.telephone.id_for_label }}" required>
-                        </div>
-                        <div class="mb-4">
-                            <label for="{{ form.date_souhaitee.id_for_label }}" class="form-label text-dark fw-bold">Date souhaitée</label>
-                            {{ form.date_souhaitee }}
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100 py-2">Confirmer la demande</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
     <script>
         // Script pour la Lightbox
